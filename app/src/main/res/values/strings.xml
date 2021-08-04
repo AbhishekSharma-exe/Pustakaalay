@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Pustakaalay</string>
+    <string name="button">SEARCH</string>
+    <string name="price">Price</string>
+    <string name="edit_text_hint">Search Books</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="no_books_found">No Books Found</string>
+    <string name="free">FREE</string>
+</resources>
