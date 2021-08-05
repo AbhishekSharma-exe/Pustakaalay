@@ -27,6 +27,7 @@ public class QueryUtils {
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
     public static List<Book> fetchBooksData(String requestUrl) {
+        Log.e(LOG_TAG, "Fetch data");
         // Create URL object
         URL url = createUrl(requestUrl);
 

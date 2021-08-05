@@ -1,15 +1,16 @@
 package com.example.pustakaalay;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -82,15 +83,22 @@ public class BookActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mEmptyStateTextView = findViewById(R.id.emptyView);
 
+        mEmptyStateTextView.setVisibility(GONE);
+
         // Create a new adapter that takes an empty list of books as input
         adapter = new BookAdapter(this, new ArrayList<Book>());
 
         // Set the adapter on the listview
         bookListView.setAdapter(adapter);
 
+
         // Checks internet connection on opening the app
         if (!isNetworkAvailable()) {
             mEmptyStateTextView.setText(R.string.no_internet_connection);
+            mEmptyStateTextView.setVisibility(VISIBLE);
+        } else {
+            LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(BOOK_LOADER_ID, null, this);
         }
 
         // Click listener for Search button
@@ -102,8 +110,7 @@ public class BookActivity extends AppCompatActivity implements LoaderManager.Loa
                     updateURLString(editText.getText().toString());
                     RestartLoader();
                     Log.i(LOG_TAG, "Search Book: " + editText.getText().toString());
-                }
-                else {
+                } else {
                     // Clear the previous output or listView
                     adapter.clear();
 
@@ -137,6 +144,7 @@ public class BookActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /**
      * This func checks the status of the network
+     *
      * @return boolean, true or false
      */
     private boolean isNetworkAvailable() {
@@ -153,11 +161,12 @@ public class BookActivity extends AppCompatActivity implements LoaderManager.Loa
 
         progressBar.setVisibility(VISIBLE);
         mEmptyStateTextView.setVisibility(GONE);
-        LoaderManager.getInstance(this).restartLoader(BOOK_LOADER_ID, null, this);
+        getLoaderManager().restartLoader(BOOK_LOADER_ID, null, this);
     }
 
     /**
      * Takes the input from user removes the spaces from it and merges with GOOGLE BOOKS API URl
+     *
      * @param searchStr user input from editText
      * @return final google books url string
      */
@@ -174,6 +183,7 @@ public class BookActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<List<Book>> onCreateLoader(int id, Bundle args) {
 
         updateURLString(editText.getText().toString());
+        Log.e(LOG_TAG, ": Loader create");
         return new BookLoader(this, GOOGLE_BOOKS_URL);
 
     }
@@ -181,27 +191,32 @@ public class BookActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
 
-        mEmptyStateTextView.setText(R.string.no_books_found);
 
         progressBar.setVisibility(GONE);
 
         adapter.clear();
 
+
         // If there is a valid list of link books, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (data != null && !data.isEmpty()) {
             adapter.addAll(data);
+            Log.e(LOG_TAG, " IF");
         }
 
         // Make no books found visible
         else {
+
+            mEmptyStateTextView.setText(R.string.no_books_found);
             mEmptyStateTextView.setVisibility(VISIBLE);
+            Log.e(LOG_TAG, "ELSE");
         }
+        Log.e(LOG_TAG, "loader finished");
     }
 
     @Override
     public void onLoaderReset(Loader<List<Book>> loader) {
         adapter.clear();
-        Log.i(LOG_TAG, ": Loader reset");
+        Log.e(LOG_TAG, ": Loader reset");
     }
 }

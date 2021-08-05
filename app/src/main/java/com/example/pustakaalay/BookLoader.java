@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 
-import androidx.loader.content.AsyncTaskLoader;
+import android.content.AsyncTaskLoader;
 
 import java.util.List;
 
@@ -20,13 +20,13 @@ public class BookLoader extends AsyncTaskLoader<List<Book>> {
     public BookLoader( Context context,String url) {
         super(context);
         mUrl=url;
-        Log.i(LOG_TAG, ": Loaded!");
+        Log.e(LOG_TAG, ": Loaded!");
     }
 
     @Override
     protected void onStartLoading() {
         forceLoad();
-        Log.i("On start loading", ": Force loaded!");
+        Log.e("On start loading", ": Force loaded!");
     }
 
 
@@ -36,7 +36,7 @@ public class BookLoader extends AsyncTaskLoader<List<Book>> {
         }
         // Perform the network request, parse the response, and extract a list of Books.
         List<Book> books = QueryUtils.fetchBooksData(mUrl);
-        Log.i(LOG_TAG, ": Loaded in background!");
+        Log.e(LOG_TAG, ": Loaded in background!");
         return books;
     }
 }

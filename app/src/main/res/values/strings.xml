@@ -6,4 +6,5 @@
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="no_books_found">No Books Found</string>
     <string name="free">FREE</string>
+    <string name="empty_edit_text">Search for Books and authors</string>
 </resources>
